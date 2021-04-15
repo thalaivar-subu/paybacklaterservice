@@ -20,7 +20,8 @@ type Merchant struct {
 
 type Transaction struct {
 	gorm.Model
-	Amount     float64 `json:"amount"`
-	UserID     int
-	MerchantID int
+	Amount          float64 `json:"amount"`
+	UserID          uint
+	MerchantID      uint
+	AmountToService float64 `json:"amount_to_service"`
 }

@@ -10,14 +10,16 @@ import (
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 )
 
+var Db *gorm.DB
+
 // ConnectMysql -> Connects Mysql
-func ConnectMysql() *gorm.DB {
+func ConnectMysql() {
 	db, err := gorm.Open("mysql", config.Config["mysql"])
 	if err != nil {
 		fmt.Println("Connection Failed to Open", err)
 	} else {
-		fmt.Println("Connection Established")
+		fmt.Println("Mysql Connection Established")
 		Migrate(db)
 	}
-	return db
+	Db = db
 }
