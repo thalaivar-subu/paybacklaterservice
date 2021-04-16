@@ -9,6 +9,7 @@ type User struct {
 	Name        string  `json:"name"`
 	Email       string  `json:"email"`
 	CreditLimit float64 `json:"credit_limit"`
+	Dues        float64 `json:"dues"`
 }
 
 type Merchant struct {

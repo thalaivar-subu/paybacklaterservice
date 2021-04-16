@@ -1,6 +1,8 @@
 package helper
 
-import "strings"
+import (
+	"strings"
+)
 
 func TrimSuffix(s, suffix string) string {
 	if strings.HasSuffix(s, suffix) {

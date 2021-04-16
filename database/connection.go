@@ -15,6 +15,7 @@ var Db *gorm.DB
 // ConnectMysql -> Connects Mysql
 func ConnectMysql() {
 	db, err := gorm.Open("mysql", config.Config["mysql"])
+	// db.LogMode(true)
 	if err != nil {
 		fmt.Println("Connection Failed to Open", err)
 	} else {

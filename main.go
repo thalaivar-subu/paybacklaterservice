@@ -44,38 +44,94 @@ func run(in io.Reader, out io.Writer) {
 
 			inputArgs := strings.Split(text, " ")
 			output := ""
+			inValid := false
 			if inputArgs[0] == "new" {
 				if inputArgs[1] == "user" {
 					flag, result, errorMsg := crud.CreateUser(inputArgs[2], inputArgs[3], inputArgs[4], db)
 					if !flag {
-						output = errorMsg.Error()
+						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
 					}
 				} else if inputArgs[1] == "merchant" {
 					flag, result, errorMsg := crud.CreateMerchant(inputArgs[2], inputArgs[3], inputArgs[4], db)
 					if !flag {
-						output = errorMsg.Error()
+						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
 					}
 				} else if inputArgs[1] == "txn" {
 					flag, result, errorMsg := crud.CreateTxn(inputArgs[2], inputArgs[3], inputArgs[4], db)
 					if !flag {
-						output = errorMsg.Error()
+						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
 					}
 				} else {
-					output = "Not Valid new Command"
-					os.Exit(1)
+					inValid = true
 				}
-				fmt.Print(output)
+			} else if inputArgs[0] == "report" {
+				if inputArgs[1] == "users-at-credit-limit" {
+					flag, result, errorMsg := crud.GetUsersAtCredLimit(db)
+					if !flag {
+						output = "rejected!" + " (" + errorMsg.Error() + ")"
+					} else {
+						output = result
+					}
+				} else if inputArgs[1] == "total-dues" {
+					flag, result, errorMsg := crud.GetTotalDues(db)
+					if !flag {
+						output = "rejected!" + " (" + errorMsg.Error() + ")"
+					} else {
+						output = result
+					}
+				} else if inputArgs[1] == "discount" {
+					flag, result, errorMsg := crud.GetDiscount(inputArgs[2], db)
+					if !flag {
+						output = "rejected!" + " (" + errorMsg.Error() + ")"
+					} else {
+						output = result
+					}
+				} else if inputArgs[1] == "dues" {
+					flag, result, errorMsg := crud.GetUserDues(inputArgs[2], db)
+					if !flag {
+						output = "rejected!" + " (" + errorMsg.Error() + ")"
+					} else {
+						output = result
+					}
+				} else {
+					inValid = true
+				}
+			} else if inputArgs[0] == "payback" {
+				flag, result, errorMsg := crud.PayBack(inputArgs[1], inputArgs[2], db)
+				if !flag {
+					output = "rejected!" + " (" + errorMsg.Error() + ")"
+				} else {
+					output = result
+				}
+			} else if inputArgs[0] == "update" {
+				if inputArgs[1] == "merchant" {
+					flag, result, errorMsg := crud.UpdateMerchantDiscount(inputArgs[2], inputArgs[3], db)
+					if !flag {
+						output = "rejected!" + " (" + errorMsg.Error() + ")"
+					} else {
+						output = result
+					}
+				} else {
+					inValid = true
+				}
+			} else {
+				inValid = true
 			}
-
+			if inValid {
+				output = "Not a Valid Command"
+			}
+			fmt.Fprintf(out, "%s", output)
+			fmt.Println()
 		}
 	}
 	initApplication()
+
 	// handle error
 	if scanner.Err() != nil {
 		fmt.Println("Error: ", scanner.Err())
