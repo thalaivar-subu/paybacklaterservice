@@ -7,7 +7,9 @@ import (
 	"os"
 	"strings"
 
-	"github.com/thalaivar-subu/paylaterservice/crud"
+	"github.com/thalaivar-subu/paylaterservice/cmd/merchant"
+	"github.com/thalaivar-subu/paylaterservice/cmd/txn"
+	"github.com/thalaivar-subu/paylaterservice/cmd/user"
 	"github.com/thalaivar-subu/paylaterservice/database"
 )
 
@@ -25,11 +27,11 @@ func run(in io.Reader, out io.Writer) {
 
 	scanner := bufio.NewScanner(in)
 	initApplication := func() {
-		// defer func() {
-		// 	if err := recover(); err != nil {
-		// 		fmt.Println(err)
-		// 	}
-		// }()
+		defer func() {
+			if err := recover(); err != nil {
+				fmt.Println(err)
+			}
+		}()
 		for {
 			fmt.Print(">")
 			// reads user input until \n by default
@@ -47,22 +49,22 @@ func run(in io.Reader, out io.Writer) {
 			inValid := false
 			if inputArgs[0] == "new" {
 				if inputArgs[1] == "user" {
-					flag, result, errorMsg := crud.CreateUser(inputArgs[2], inputArgs[3], inputArgs[4], db)
-					if !flag {
+					result, errorMsg := user.CreateUser(inputArgs[2], inputArgs[3], inputArgs[4], db)
+					if errorMsg != nil {
 						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
 					}
 				} else if inputArgs[1] == "merchant" {
-					flag, result, errorMsg := crud.CreateMerchant(inputArgs[2], inputArgs[3], inputArgs[4], db)
-					if !flag {
+					result, errorMsg := merchant.CreateMerchant(inputArgs[2], inputArgs[3], inputArgs[4], db)
+					if errorMsg != nil {
 						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
 					}
 				} else if inputArgs[1] == "txn" {
-					flag, result, errorMsg := crud.CreateTxn(inputArgs[2], inputArgs[3], inputArgs[4], db)
-					if !flag {
+					result, errorMsg := txn.CreateTxn(inputArgs[2], inputArgs[3], inputArgs[4], db)
+					if errorMsg != nil {
 						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
@@ -72,29 +74,29 @@ func run(in io.Reader, out io.Writer) {
 				}
 			} else if inputArgs[0] == "report" {
 				if inputArgs[1] == "users-at-credit-limit" {
-					flag, result, errorMsg := crud.GetUsersAtCredLimit(db)
-					if !flag {
+					result, errorMsg := user.GetUsersAtCredLimit(db)
+					if errorMsg != nil {
 						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
 					}
 				} else if inputArgs[1] == "total-dues" {
-					flag, result, errorMsg := crud.GetTotalDues(db)
-					if !flag {
+					result, errorMsg := user.GetTotalDues(db)
+					if errorMsg != nil {
 						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
 					}
 				} else if inputArgs[1] == "discount" {
-					flag, result, errorMsg := crud.GetDiscount(inputArgs[2], db)
-					if !flag {
+					result, errorMsg := merchant.GetDiscount(inputArgs[2], db)
+					if errorMsg != nil {
 						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
 					}
 				} else if inputArgs[1] == "dues" {
-					flag, result, errorMsg := crud.GetUserDues(inputArgs[2], db)
-					if !flag {
+					result, errorMsg := user.GetUserDues(inputArgs[2], db)
+					if errorMsg != nil {
 						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result
@@ -103,16 +105,16 @@ func run(in io.Reader, out io.Writer) {
 					inValid = true
 				}
 			} else if inputArgs[0] == "payback" {
-				flag, result, errorMsg := crud.PayBack(inputArgs[1], inputArgs[2], db)
-				if !flag {
+				result, errorMsg := user.PayBack(inputArgs[1], inputArgs[2], db)
+				if errorMsg != nil {
 					output = "rejected!" + " (" + errorMsg.Error() + ")"
 				} else {
 					output = result
 				}
 			} else if inputArgs[0] == "update" {
 				if inputArgs[1] == "merchant" {
-					flag, result, errorMsg := crud.UpdateMerchantDiscount(inputArgs[2], inputArgs[3], db)
-					if !flag {
+					result, errorMsg := merchant.UpdateMerchantDiscount(inputArgs[2], inputArgs[3], db)
+					if errorMsg != nil {
 						output = "rejected!" + " (" + errorMsg.Error() + ")"
 					} else {
 						output = result

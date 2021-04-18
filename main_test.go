@@ -72,25 +72,3 @@ func TestTxn(t *testing.T) {
 		})
 	}
 }
-
-// func TestReport(t *testing.T) {
-// 	testData := map[string]string{
-// 		"report users-at-credit-limit": "user1\nuser3",
-// 		// "report users-at-credit-limit": "user1\nuser3",
-// 		"report discount m3": "6.25",
-// 		"report total-dues":  "user1: 300\nuser3: 100\ntotal: 400",
-// 	}
-// 	for k, v := range testData {
-// 		t.Run(k, func(t *testing.T) {
-// 			var command, result bytes.Buffer
-// 			t.Log(&command, k)
-// 			fmt.Fprintf(&command, k)
-// 			run(&command, &result)
-// 			if result.String() != v {
-// 				t.Error("Result '" + result.String() + "' not equal to expectedOutput '" + v + "'")
-// 			} else {
-// 				t.Log("Pass -> ", result.String())
-// 			}
-// 		})
-// 	}
-// }
