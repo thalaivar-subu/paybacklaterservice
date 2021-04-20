@@ -1,4 +1,4 @@
-# paybacklaterservice
+# paylaterservice
 
 
 Building a Simple Pay-Later Service 
